@@ -11,25 +11,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (curtain) {
         document.documentElement.classList.add('curtain-active');
 
+        // Click anywhere on curtain to open
         curtain.addEventListener('click', function openCurtain() {
-            // Play music (allowed because user clicked)
             const music = document.getElementById('bg-music');
+            const toggle = document.getElementById('music-toggle');
+
             if (music) {
-                music.play().catch(() => {});
-                const toggle = document.getElementById('music-toggle');
-                if (toggle) toggle.classList.add('playing');
+                music.play().then(() => {
+                    if (toggle) toggle.classList.add('playing');
+                }).catch(e => console.log("Audio play blocked or failed", e));
             }
 
-            // Open the curtain
             curtain.classList.add('open');
 
+            // Wait for 2.5s transition to finish before hiding
             setTimeout(() => {
                 curtain.style.display = 'none';
                 document.documentElement.classList.remove('curtain-active');
                 document.documentElement.style.overflow = '';
-            }, 1500);
+            }, 2700);
 
-            // Remove listener so it only fires once
             curtain.removeEventListener('click', openCurtain);
         });
     }

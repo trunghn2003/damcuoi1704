@@ -40,7 +40,7 @@ html.curtain-active {
   width: 50%;
   height: 100%;
   overflow: hidden;
-  transition: transform 1.4s cubic-bezier(0.76, 0, 0.24, 1);
+  transition: transform 2.5s cubic-bezier(0.7, 0, 0.3, 1);
 
   /* Rich fabric texture via gradient layers */
   background:
@@ -97,6 +97,12 @@ html.curtain-active {
   align-items: center;
   padding: 20px;
   gap: 10px;
+  transition: opacity 1.8s ease;
+}
+
+/* Fade text when opened */
+#curtain-overlay.open .curtain-inner {
+  opacity: 0;
 }
 
 /* Left side: mirror content to the right edge */
@@ -190,6 +196,68 @@ html.curtain-active {
   .curtain-right .curtain-inner { padding-left: 20px; }
 }
 
+/* Curtain Button Styling */
+.curtain-button-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  transition: all 0.5s ease;
+}
+
+#curtain-overlay.open .curtain-button-wrapper {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.8);
+}
+
+.curtain-button {
+  width: 110px;
+  height: 110px;
+  background: #fdfaf5;
+  border: 2px solid var(--color-gold);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 25px rgba(197, 160, 89, 0.3), inset 0 0 15px rgba(197, 160, 89, 0.1);
+  animation: pulse-gold 2.5s infinite;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.curtain-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 35px rgba(197, 160, 89, 0.5);
+}
+
+.btn-script {
+  font-family: var(--font-accent);
+  font-size: 2.2rem;
+  color: var(--color-gold);
+  line-height: 0.8;
+  margin-top: -5px;
+}
+
+.btn-text {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--color-gold);
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+@keyframes pulse-gold {
+  0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4); }
+  70% { box-shadow: 0 0 0 25px rgba(197, 160, 89, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
+}
+
 /* RESET */
 * {
   margin: 0;
@@ -230,11 +298,31 @@ body {
 @media (min-width: 769px) {
   .hero {
     background:
-      linear-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0.5)),
+      radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.3) 100%),
+      linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.5)),
       url('QUYNH & VIET_/AN_01246.jpg');
     background-size: cover;
     background-position: center 35%; /* shows couple faces and arch */
-    padding-bottom: 100px;
+    padding-bottom: 120px;
+  }
+
+  .hero-wedding-text { font-size: 8rem; margin-bottom: -15px; }
+  .hero-names { font-size: 56px; letter-spacing: 4px; }
+  .hero-date { font-size: 36px; margin-top: 15px; }
+
+  .hero-content {
+    text-align: center;
+    max-width: 800px;
+  }
+
+  section { padding: 120px 40px; }
+
+  #gallery h2,
+  #rsvp h2,
+  #gift h2,
+  #details h2 {
+    font-size: 4.2rem;
+    margin-bottom: 50px;
   }
 }
 
@@ -606,8 +694,21 @@ section {
   }
 }
 .album {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
+}
+
+@media (min-width: 769px) {
+  .album-main {
+    max-height: 80vh;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.15);
+  }
+
+  .album-thumbs img {
+    width: 90px;
+    height: 90px;
+  }
 }
 
 /* ảnh lớn */
