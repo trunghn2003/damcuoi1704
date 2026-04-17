@@ -1,16 +1,31 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Loading Screen
-    const loadingScreen = document.getElementById('loading-screen');
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            loadingScreen.style.opacity = '0';
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-            }, 1000);
-        }, 1000);
-    });
+// Force scroll to top on every page load (fixes browser scroll restoration)
+if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
 
-    // 2. Scroll Reveal
+document.addEventListener('DOMContentLoaded', () => {
+
+    // 1. Curtain Opening Effect
+    const curtain = document.getElementById('curtain-overlay');
+    if (curtain) {
+        document.documentElement.classList.add('curtain-active');
+
+        setTimeout(() => {
+            curtain.classList.add('open');
+
+            setTimeout(() => {
+                curtain.style.display = 'none';
+                document.documentElement.classList.remove('curtain-active');
+                // Unlock scroll — remove inline overflow:hidden from <html>
+                document.documentElement.style.overflow = '';
+            }, 1500);
+        }, 1800);
+    }
+
+
+
+    // 2. Scroll Reveal — JS adds .scroll-hidden first, then observer adds .visible
     const observerOptions = {
         threshold: 0.1
     };
@@ -24,6 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }, observerOptions);
 
     document.querySelectorAll('section').forEach(section => {
+        // Skip the hero — it should always be visible
+        if (section.querySelector('.hero') || section.classList.contains('hero')) return;
+        section.classList.add('scroll-hidden');
         observer.observe(section);
     });
 
@@ -121,9 +139,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.querySelectorAll(".album-thumbs img").forEach((img, i) => {
             img.classList.toggle("active", i === current);
-            // Auto scroll thumbnails into view
+            // Auto scroll thumbnail into center — container only, NOT the whole page
             if (i === current) {
-                img.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                const container = img.parentElement;
+                if (container) {
+                    const scrollPos = img.offsetLeft - container.offsetWidth / 2 + img.offsetWidth / 2;
+                    container.scrollTo({ left: scrollPos, behavior: 'smooth' });
+                }
             }
         });
     }

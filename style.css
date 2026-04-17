@@ -11,6 +11,185 @@
   --font-accent: 'Pinyon Script', cursive;
 }
 
+/* ===================================================
+   CURTAIN OPENING EFFECT
+   =================================================== */
+
+/* Prevent browser scroll restoration while curtain is showing */
+html.curtain-active {
+  overflow: hidden !important;
+  height: 100% !important;
+}
+
+#curtain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  pointer-events: all;
+  overflow: hidden;
+}
+
+/* Hide overlay after animation done */
+#curtain-overlay.opened {
+  pointer-events: none;
+}
+
+.curtain {
+  position: relative;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 1.4s cubic-bezier(0.76, 0, 0.24, 1);
+
+  /* Rich fabric texture via gradient layers */
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.03) 0px,
+      rgba(255,255,255,0.03) 2px,
+      transparent 2px,
+      transparent 18px
+    ),
+    repeating-linear-gradient(
+      180deg,
+      rgba(0,0,0,0.04) 0px,
+      transparent 80px
+    ),
+    linear-gradient(160deg, #6b3a3a 0%, #8b4a45 25%, #7a3f3a 50%, #5c2e2e 75%, #6b3a3a 100%);
+
+  box-shadow: inset -6px 0 30px rgba(0,0,0,0.25);
+}
+
+.curtain-right {
+  box-shadow: inset 6px 0 30px rgba(0,0,0,0.25);
+}
+
+/* Slide panels outward on open */
+#curtain-overlay.open .curtain-left {
+  transform: translateX(-100%);
+}
+
+#curtain-overlay.open .curtain-right {
+  transform: translateX(100%);
+}
+
+/* Center seam line */
+.curtain-seam {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, rgba(212,185,130,0.7) 20%, rgba(212,185,130,0.7) 80%, transparent);
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Curtain inner content centering */
+.curtain-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  gap: 10px;
+}
+
+/* Left side: mirror content to the right edge */
+.curtain-left .curtain-inner {
+  align-items: flex-end;
+  padding-right: 32px;
+}
+
+/* Right side: mirror content to the left edge */
+.curtain-right .curtain-inner {
+  align-items: flex-start;
+  padding-left: 32px;
+}
+
+.curtain-ornament-top,
+.curtain-ornament-bot {
+  font-size: 0.9rem;
+  color: rgba(212,185,130,0.7);
+  letter-spacing: 6px;
+}
+
+.curtain-script {
+  font-family: var(--font-accent);
+  font-size: 3.5rem;
+  color: rgba(255,255,255,0.9);
+  text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  line-height: 1;
+}
+
+.curtain-names {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.95);
+  text-align: center;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+  line-height: 1.5;
+}
+
+.curtain-amp {
+  font-family: var(--font-accent);
+  font-size: 2rem;
+  color: rgba(212,185,130,0.9);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.curtain-date {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  letter-spacing: 4px;
+  color: rgba(212,185,130,0.85);
+  margin-top: 4px;
+}
+
+/* Curtain top fold shadow for 3D depth */
+.curtain::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Curtain bottom drape shadow */
+.curtain::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Mobile tweaks */
+@media (max-width: 768px) {
+  .curtain-script { font-size: 2.5rem; }
+  .curtain-names { font-size: 1.1rem; }
+  .curtain-amp { font-size: 1.6rem; }
+  .curtain-left .curtain-inner { padding-right: 20px; }
+  .curtain-right .curtain-inner { padding-left: 20px; }
+}
+
 /* RESET */
 * {
   margin: 0;
@@ -768,18 +947,14 @@ footer p { margin-bottom: 6px; }
 
 /* ================= SCROLL REVEAL ================= */
 
-section {
+/* Sections start visible by default — JS adds .scroll-hidden to animate */
+section.scroll-hidden {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.7s ease, transform 0.7s ease;
 }
 
-section.visible {
+section.scroll-hidden.visible {
   opacity: 1;
   transform: translateY(0);
-}
-
-.hero {
-  opacity: 1 !important;
-  transform: none !important;
 }
