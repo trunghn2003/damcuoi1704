@@ -6,22 +6,34 @@ window.scrollTo(0, 0);
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 1. Curtain Opening Effect
+    // 1. Curtain — Click to Open + Play Music
     const curtain = document.getElementById('curtain-overlay');
     if (curtain) {
         document.documentElement.classList.add('curtain-active');
 
-        setTimeout(() => {
+        curtain.addEventListener('click', function openCurtain() {
+            // Play music (allowed because user clicked)
+            const music = document.getElementById('bg-music');
+            if (music) {
+                music.play().catch(() => {});
+                const toggle = document.getElementById('music-toggle');
+                if (toggle) toggle.classList.add('playing');
+            }
+
+            // Open the curtain
             curtain.classList.add('open');
 
             setTimeout(() => {
                 curtain.style.display = 'none';
                 document.documentElement.classList.remove('curtain-active');
-                // Unlock scroll — remove inline overflow:hidden from <html>
                 document.documentElement.style.overflow = '';
             }, 1500);
-        }, 1800);
+
+            // Remove listener so it only fires once
+            curtain.removeEventListener('click', openCurtain);
+        });
     }
+
 
 
 
